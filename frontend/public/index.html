@@ -37,6 +37,48 @@
         scroll-behavior: smooth;
       }
     </style>
+    <!-- Inside <head> in public/index.html -->
+<style>
+  /* Keyframes for Netflix-like logo animation */
+  @keyframes netflix-logo {
+    0% {
+      transform: scale(0.5);
+      opacity: 0;
+      filter: blur(5px);
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 1;
+      filter: blur(0);
+    }
+    75% {
+      transform: scale(0.9);
+      opacity: 1;
+      filter: blur(0);
+    }
+    100% {
+      transform: scale(1.5);
+      opacity: 0;
+      filter: blur(5px);
+    }
+  }
+
+  /* Keyframes for slow spin (for spinner) */
+  @keyframes spin-slow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Apply animations using Tailwind's arbitrary values or extend theme */
+  /* For simplicity, we'll use direct CSS here */
+  .animate-netflix-logo {
+    animation: netflix-logo 1.5s ease-in-out forwards;
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 2s linear infinite;
+  }
+</style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>

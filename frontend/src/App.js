@@ -3,18 +3,20 @@ import React, { useState, useEffect } from 'react';
 // Main App Component
 const App = () => {
   const [profileData, setProfileData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // Controls initial data fetch loading
+  const [showLoadingScreen, setShowLoadingScreen] = useState(true); // Controls the animated loading screen
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fetch data from the backend
+    // Simulate data fetching
     const fetchProfileData = async () => {
       try {
         // In a real application, replace this with your actual backend URL
-        // Example: const response = await fetch('http://localhost:5000/api/profile');
-        // For now, we'll use mock data to demonstrate the structure.
-        // Once your backend is running and populated, uncomment the fetch line above
-        // and remove or comment out the mockData assignment below.
+        // Example: const response = await fetch('https://your-backend-name.onrender.com/api/profile');
+        // const data = await response.json();
+        // setProfileData(data);
+
+        // For now, use mock data to demonstrate the structure and loading
         const mockData = {
           name: "GUDURU MUKHESH KRISHNA",
           title: "Package App Developer",
@@ -76,9 +78,9 @@ const App = () => {
           ],
           contact: {
             email: "mukeshguduru444@gmail.com",
-            phone: "+91 8247794171",
-            linkedin: "https://www.linkedin.com/in/mukhesh-krishna-guduru-649998213/", 
-            github: "https://github.com/Mukheshkrishna",
+            phone: "+91 8247794171", // Added phone number
+            linkedin: "https://www.linkedin.com/in/guduru-mukhesh-krishna-25651b228/", // Updated LinkedIn
+            github: "https://github.com/Mukheshkrishna", // Updated GitHub
           },
           education: [
             {
@@ -117,21 +119,33 @@ const App = () => {
         setError("Failed to load profile data.");
         console.error("Error fetching profile data:", err);
       } finally {
-        setLoading(false);
+        setLoading(false); // Data fetching is complete
       }
     };
 
     fetchProfileData();
   }, []);
 
+  // Effect to manage the animated loading screen
+  useEffect(() => {
+    if (!loading && profileData) { // Once data is loaded
+      const timer = setTimeout(() => {
+        setShowLoadingScreen(false); // Hide the animated loading screen
+      }, 2000); // Display loading animation for 2 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [loading, profileData]);
+
+  // If initial data is still loading (before any animation)
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
-        Loading portfolio...
+        Initializing portfolio...
       </div>
     );
   }
 
+  // If there's an error
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-red-500">
@@ -141,6 +155,7 @@ const App = () => {
     );
   }
 
+  // If no profile data (shouldn't happen if mockData is always set)
   if (!profileData) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white">
@@ -149,15 +164,27 @@ const App = () => {
     );
   }
 
+  const initials = profileData.name ? profileData.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'JD';
+
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 font-inter">
-      {/*
-        Tailwind CSS CDN and font styles are now in public/index.html
-        This ensures they load globally before React components.
-      */}
+      {/* The loading screen overlay */}
+      {showLoadingScreen && (
+        <div className="fixed inset-0 bg-gray-900 flex items-center justify-center z-50 transition-opacity duration-1000"
+             style={{ opacity: showLoadingScreen ? 1 : 0 }}>
+          <div className="relative">
+            <span className="text-teal-400 text-8xl font-extrabold animate-netflix-logo">
+              {initials}
+            </span>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-24 h-24 border-4 border-t-4 border-teal-500 border-opacity-50 rounded-full animate-spin-slow"></div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Navigation Bar */}
-      <nav className="fixed w-full bg-gray-800 bg-opacity-90 backdrop-blur-sm z-50 shadow-lg">
+      <nav className="fixed w-full bg-gray-800 bg-opacity-90 backdrop-blur-sm z-40 shadow-lg">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <a href="#home" className="text-2xl font-bold text-teal-400 hover:text-teal-300 transition duration-300">
             {profileData.name.split(' ')[0]}'s Portfolio
@@ -168,14 +195,15 @@ const App = () => {
             <NavLink href="#skills" text="Skills" />
             <NavLink href="#experience" text="Experience" />
             <NavLink href="#projects" text="Projects" />
-            <NavLink href="#education" text="Education" /> {/* New Nav Link */}
-            <NavLink href="#certifications" text="Certifications" /> {/* New Nav Link */}
-            <NavLink href="#achievements" text="Achievements" /> {/* New Nav Link */}
+            <NavLink href="#education" text="Education" />
+            <NavLink href="#certifications" text="Certifications" />
+            <NavLink href="#achievements" text="Achievements" />
             <NavLink href="#contact" text="Contact" />
           </div>
         </div>
       </nav>
 
+      {/* Main Content Sections */}
       {/* Home Section */}
       <section id="home" className="relative flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 text-center pt-20">
         <div className="absolute inset-0 bg-cover bg-center opacity-10" style={{ backgroundImage: "url('https://placehold.co/1920x1080/1a202c/FFFFFF?text=Abstract+Background')" }}></div>
